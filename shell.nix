@@ -30,6 +30,7 @@ with import <nixpkgs> {};
       # You could also call julia -e "Pkg.init()" # and if you want install the packages you need
       julia -e "Pkg.init()"
       julia -e 'Pkg.add("IJulia")'
+      julia -e 'Pkg.add("SugarBLAS")'
       '';
     };
 }
