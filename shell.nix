@@ -11,7 +11,6 @@ with import <nixpkgs> {};
       gnum4
       zeromq
       cmake
-        mbedtls
     ];
 
     src = ./.;
@@ -20,17 +19,25 @@ with import <nixpkgs> {};
     GIT_SSL_CAINFO="/etc/ssl/certs/ca-certificates.crt";
 
     # First important part: Add here the dependencies the packages you want to install need
-    LD_LIBRARY_PATH="${glfw}/lib:${mesa}/lib:${freetype}/lib:${imagemagick}/lib:${portaudio}/lib:${libsndfile.out}/lib:${libxml2.out}/lib:${expat.out}/lib:${cairo.out}/lib:${pango.out}/lib:${gettext.out}/lib:${glib.out}/lib:${gtk3.out}/lib:${gdk_pixbuf.out}/lib:${cairo.out}:${tk.out}/lib:${tcl.out}/lib:${pkgs.sqlite.out}/lib:${pkgs.zlib}/lib";
+    LD_LIBRARY_PATH="${glfw}/lib:${mesa}/lib:${freetype}/lib:${imagemagick}/lib:${portaudio}/lib:${libsndfile.out}/lib:${libxml2.out}/lib:${expat.out}/lib:${cairo.out}/lib:${pango.out}/lib:${gettext.out}/lib:${glib.out}/lib:${gtk3.out}/lib:${gdk_pixbuf.out}/lib:${cairo.out}:${tk.out}/lib:${tcl.out}/lib:${pkgs.sqlite.out}/lib:${pkgs.zlib}/lib:${mbedtls.out}/lib";
     shellHook = ''
       unset http_proxy
-      # This is the seconnd important part. Set a relative julia_pkgdir path so that they are specific to this
+      # This is the second important part. Set a relative julia_pkgdir path so that they are specific to this
       # Nix env environment and are not global
       export JULIA_PKGDIR=$(realpath ./.julia_pkgs)
-      mkdir -p $JULIA_PKGDIR
-      # You could also call julia -e "Pkg.init()" # and if you want install the packages you need
-      julia -e "Pkg.init()"
+      if [ ! -d $JULIA_PKGDIR ]; then
+        echo "Initialize Julia package directory"
+        julia -e "Pkg.init()"
+        mkdir -p $JULIA_PKGDIR
+      else
+        echo "Update Julia packages"
+        julia -e "Pkg.update()"
+      fi
       julia -e 'Pkg.add("IJulia")'
       julia -e 'Pkg.add("SugarBLAS")'
+      julia -e 'Pkg.add("Plots")'
+      julia -e 'Pkg.add("PyPlot")'
+      julia -e 'Pkg.add("Gadfly")'
       '';
     };
 }
