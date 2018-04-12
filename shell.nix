@@ -8,6 +8,7 @@ with import <nixpkgs> {};
       # Any other dependency you need
       python
       pythonPackages.jupyter
+      pythonPackages.matplotlib
       gnum4
       zeromq
       cmake
