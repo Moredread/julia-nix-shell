@@ -9,6 +9,7 @@ with import <nixpkgs> {};
       python
       pythonPackages.jupyter
       pythonPackages.matplotlib
+      pythonPackages.ipyparallel
       gnum4
       zeromq
       cmake
@@ -39,6 +40,7 @@ with import <nixpkgs> {};
       julia -e 'Pkg.add("Plots")'
       julia -e 'Pkg.add("PyPlot")'
       julia -e 'Pkg.add("Gadfly")'
+      # ipcluster nbextension enable
       '';
     };
 }
